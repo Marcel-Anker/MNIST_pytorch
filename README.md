@@ -1,1 +1,1 @@
-# MNIST_scikit_learn
+# MNIST_pytorch
