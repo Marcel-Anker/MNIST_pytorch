@@ -12,8 +12,8 @@ class Data:
         ])
 
     def get_loaders(self):
-        train_data = datasets.MNIST(root=self.config.data_root, train=True, download=True, transform=self.transform)
-        test_data = datasets.MNIST(root=self.config.data_root, train=False, download=True, transform=self.transform)
+        train_data = datasets.MNIST(root="./../data", train=True, download=True, transform=self.transform)
+        test_data = datasets.MNIST(root="./../data", train=False, download=True, transform=self.transform)
 
         train_len = int(len(train_data) * 0.8)
         val_len = len(train_data) - train_len
