@@ -1,9 +1,9 @@
 import torch.nn as nn
 import torch.nn.functional as functions
 
-class Model(nn.Module):
+class MLPModel(nn.Module):
     def __init__(self, config):
-        super(Model, self).__init__()
+        super(MLPModel, self).__init__()
         self.config = config
         self.firstFc = nn.Linear(28 * 28, self.config.hidden_layer_size) #28 * 28 mnist bild
         for i in range(self.config.number_of_hidden_layers):
