@@ -15,9 +15,12 @@ class CNNBNormModel(nn.Module):
         self.fc = nn.Linear(in_features=h * w * self.config.out_channels * 2 * self.config.number_conv_layers, out_features=10)
 
     def forward(self, result):
-        result = result.view(result.size(0), -1)
-        result = functions.relu(self.firstFc(result))
-        for i in range(self.config.number_of_hidden_layers):
-            result = getattr(self, f"fc{i}")(result)
-        result = self.lastFc(result)
+        result = functions.relu(self.firstConv(result))
+        #print(result.shape, "1")
+        for i in range(self.config.number_conv_layers):
+            result = getattr(self, f"conv{i}")(result)
+            #print(result.shape, "n")
+        result = torch.flatten(result, 1)
+        #print(result, "2")
+        result = self.fc(result)
         return result
