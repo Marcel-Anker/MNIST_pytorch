@@ -96,7 +96,17 @@ class Trainer:
             trainMetric = TrainingMetric(loss=train_loss, epoch=epoch)
             valMetric = TrainingMetric(loss=val_loss, epoch=epoch)
 
-    def evaluate(self, val_loader):
+            trainMetrics.appendMetric(trainMetric)
+            valMetrics.appendMetric(valMetric)
+
+            if counter >= self.config.patience:
+                print("early stopped")
+                return valMetrics, trainMetrics
+
+        return valMetrics, trainMetrics
+
+
+    def evaluate(self, loader) -> tuple[float, int]:
         self.model.eval()
         correct = 0
         total = 0
