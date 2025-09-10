@@ -31,7 +31,8 @@ class Trainer:
         valMetrics = Metrics()
         for epoch in range(self.config.epochs):
             self.model.train()
-            running_loss = 0.0
+            best_val_acc = 0.0
+            running_train_loss = 0.0
             running_correct = 0
             total_samples = 0
             for inputs, labels in train_loader:
@@ -40,13 +41,23 @@ class Trainer:
                 loss = self.loss_function(outputs, labels)
                 loss.backward()
                 self.optimizer.step()
-                running_loss += loss.item()
+                running_train_loss += loss.item()
                 preds = torch.argmax(outputs, dim=1)
                 running_correct += (preds == labels).float().sum().item()
                 total_samples += labels.size(0)
 
             train_acc = 100 * running_correct / total_samples
-            val_acc = self.evaluate(val_loader)
+            val_acc, running_val_loss = self.evaluate(val_loader)
+            train_loss = running_train_loss / len(train_loader)
+            val_loss = running_val_loss / len(val_loader)
+            print(running_train_loss, running_val_loss)
+
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                counter = 0
+                torch.save(self.model.state_dict(), "best_model.pt")
+            else:
+                counter += 1
 
             if self.config.__module__ == MLPConfig.__name__: # ich hasse isinstance :/
                 print(f"Epoch {epoch + 1}/{self.config.epochs} | Loss: {running_loss / len(train_loader):.4f} | Val Acc: {val_acc:.2f}% | Training Acc: {train_acc:.2f}% | "
