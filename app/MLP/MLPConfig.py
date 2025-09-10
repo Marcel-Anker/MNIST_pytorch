@@ -1,6 +1,6 @@
 
 class MLPConfig:
-    def __init__(self, batchsize, lr, epochs, hidden_layer_size, number_of_hidden_layers):
+    def __init__(self, batchsize, lr, hidden_layer_size, number_of_hidden_layers, epochs = 15):
         self.batchsize = batchsize
         self.learning_rate = lr
         self.epochs = epochs
