@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as functions
 
@@ -24,3 +25,12 @@ class CNNBNormModel(nn.Module):
         #print(result, "2")
         result = self.fc(result)
         return result
+
+    def compute_out_dim(self, height, width, kernel_size, stride, padding, num_layers):
+        h, w = height, width
+        after_conv_h, after_conv_w = 0, 0
+        for _ in range(num_layers):
+            after_conv_h = (h + 2 * padding - kernel_size) // stride + 1
+            after_conv_w = (w + 2 * padding - kernel_size) // stride + 1
+
+        return after_conv_w, after_conv_h
