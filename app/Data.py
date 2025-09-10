@@ -1,7 +1,8 @@
+import torch
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
+#ssl._create_default_https_context = ssl._create_unverified_context
 
 class Data:
     def __init__(self, config):
@@ -18,7 +19,9 @@ class Data:
         train_len = int(len(train_data) * 0.8)
         val_len = len(train_data) - train_len
 
-        train_data, val_data = random_split(train_data, [train_len, val_len])
+        generator = torch.Generator().manual_seed(42)
+
+        train_data, val_data = random_split(train_data, [train_len, val_len], generator=generator)
 
         train_loader = DataLoader(dataset=train_data, batch_size=self.config.batchsize, shuffle=True)
         val_loader = DataLoader(dataset=val_data, batch_size=self.config.batchsize, shuffle=True)
