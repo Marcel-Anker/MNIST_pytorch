@@ -110,10 +110,14 @@ class Trainer:
         self.model.eval()
         correct = 0
         total = 0
+        running_loss = 0
         with torch.no_grad():
-            for inputs, labels in val_loader:
+            for inputs, labels in loader:
                 outputs = self.model(inputs)
+                loss = self.loss_function(outputs, labels)
                 _, predicted = torch.max(outputs, 1)
                 correct += torch.eq(predicted,labels).sum().item()
                 total += labels.size(0)
-        return 100 * correct / total
+                acc = 100 * correct / total
+                running_loss += loss.item()
+        return acc, running_loss
