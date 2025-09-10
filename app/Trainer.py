@@ -59,14 +59,42 @@ class Trainer:
             else:
                 counter += 1
 
-            if self.config.__module__ == MLPConfig.__name__: # ich hasse isinstance :/
-                print(f"Epoch {epoch + 1}/{self.config.epochs} | Loss: {running_loss / len(train_loader):.4f} | Val Acc: {val_acc:.2f}% | Training Acc: {train_acc:.2f}% | "
-                    f"Number of Hidden Layers: {self.config.number_of_hidden_layers} | Hidden Layer Size: {self.config.hidden_layer_size} | "
-                    f"Learning Rate: {self.config.learning_rate} | Batch Size: {self.config.batchsize}")
+            if self.config.__module__ == MLPConfig.__name__:  # ich hasse isinstance :/
+                print(
+                    f"Epoch {epoch + 1}/{self.config.epochs} | Validation Loss: {val_loss:.4f} | Training Loss: {train_loss:.4f} | Val Acc: {val_acc:.2f}% | Training Acc: {train_acc:.2f}% | "
+                    f"Learning Rate: {self.config.learning_rate} | Batch Size: {self.config.batchsize} | "
+                    f"Number of Hidden Layers: {self.config.number_of_hidden_layers} | Hidden Layer Size: {self.config.hidden_layer_size}")
+
             if self.config.__module__ == CNNConfig.__name__:
                 print(
-                    f"Epoch {epoch + 1}/{self.config.epochs} | Loss: {running_loss / len(train_loader):.4f} | Val Acc: {val_acc:.2f}% | Training Acc: {train_acc:.2f}% | "
-                    f"Learning Rate: {self.config.learning_rate} | Batch Size: {self.config.batchsize}")
+                    f"Epoch {epoch + 1}/{self.config.epochs} | Validation Loss: {val_loss:.4f} | Training Loss: {train_loss:.4f} | Val Acc: {val_acc:.2f}% | Training Acc: {train_acc:.2f}% | "
+                    f"Learning Rate: {self.config.learning_rate} | Batch Size: {self.config.batchsize} | "
+                    f"Number of Conv and Pool Layers: {self.config.number_conv_layers} | Kernel Size: {self.config.kernel_size} | "
+                    f"Out Channels: {self.config.out_channels}")
+
+            if val_acc > best_val_acc:
+                best_val_acc = val_acc
+                if self.config.__module__ == MLPConfig.__name__:
+                    model = MLP(
+                        lr=self.config.learning_rate,
+                        batchsize=self.config.batchsize,
+                        hidden_layer_size=self.config.hidden_layer_size,
+                        number_of_hidden_layers=self.config.number_of_hidden_layers,
+                    )
+                    trainMetrics.model = valMetrics.model = model
+
+                if self.config.__module__ == CNNConfig.__name__:
+                    model = CNN(
+                        lr=self.config.learning_rate,
+                        batchsize=self.config.batchsize,
+                        number_of_kernels=self.config.number_conv_layers,
+                        kernel_size=self.config.kernel_size,
+                        stride=self.config.conv_stride,
+                    )
+                    trainMetrics.model = valMetrics.model = model
+
+            trainMetric = TrainingMetric(loss=train_loss, epoch=epoch)
+            valMetric = TrainingMetric(loss=val_loss, epoch=epoch)
 
     def evaluate(self, val_loader):
         self.model.eval()
