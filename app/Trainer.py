@@ -50,7 +50,6 @@ class Trainer:
             val_acc, running_val_loss = self.evaluate(val_loader)
             train_loss = running_train_loss / len(train_loader)
             val_loss = running_val_loss / len(val_loader)
-            print(running_train_loss, running_val_loss)
 
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
@@ -93,8 +92,8 @@ class Trainer:
                     )
                     trainMetrics.model = valMetrics.model = model
 
-            trainMetric = TrainingMetric(loss=train_loss, epoch=epoch)
-            valMetric = TrainingMetric(loss=val_loss, epoch=epoch)
+            trainMetric = TrainingMetric(loss=train_loss, epoch=epoch, acc=train_acc)
+            valMetric = TrainingMetric(loss=val_loss, epoch=epoch, acc= val_acc)
 
             trainMetrics.appendMetric(trainMetric)
             valMetrics.appendMetric(valMetric)
