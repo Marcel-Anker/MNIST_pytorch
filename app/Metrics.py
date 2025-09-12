@@ -18,8 +18,13 @@ class Metrics(BaseModel):
     def appendMetric(self, metric) -> None:
         self.metrics.append(metric)
 
-    def getLastValue(self) -> TrainingMetric | None:
-        if self.metrics:
+    def getElementByIndex(self, index: int) -> TrainingMetric | None:
+        if not self.metrics:
+            print("Metrics empty")
+
+        try:
+            return self.metrics[index]
+        except IndexError:
             return self.metrics[-1]
         else:
             return print("Metrics empty")
