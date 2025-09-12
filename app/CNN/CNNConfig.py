@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class CNNConfig():
-    def __init__(self, batchsize, lr, number_conv_layers, kernel_size, conv_stride, epochs, patience, out_channels = 4):
+    def __init__(self, batchsize, lr, number_conv_layers, kernel_size, conv_stride, epochs=40, patience=7, out_channels = 4):
         self.batchsize = batchsize
         self.learning_rate = lr
         self.epochs = epochs

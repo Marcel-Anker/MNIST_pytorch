@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, SkipValidation
+from pydantic import BaseModel, ConfigDict
 from typing import List
 from app.TrainingMetric import TrainingMetric
 from app.CNN.CNN import CNN

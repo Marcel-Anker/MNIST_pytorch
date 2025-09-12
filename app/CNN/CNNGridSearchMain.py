@@ -1,17 +1,23 @@
 from CNNConfig import CNNConfig
-from CNNRunner import CNNRunner
+from app.Runner import Runner
 from app.Metrics import Metrics
 
 best_metric: Metrics | None = None
+finalLr = [0.0005, 0.001, 0.002, 0.005, 0.01]
+finalBatchsize = [4, 8, 16, 32, 64]
+finalNumberConvLayers = [4, 8, 15, 25, 50]
+finalKernelSize = [2, 3, 4, 5, 6]
+finalConvStride = [1, 2, 3, 4, 5]
+
 if __name__ == "__main__":
-    for lr in [0.001, 0.002]:
-        for batchsize in [16]:
-            for number_conv_layers in [2]:
-                for kernel_size in [3]:
-                    for conv_stride in [1]:
+    for lr in finalLr:
+        for batchsize in finalBatchsize:
+            for number_conv_layers in finalNumberConvLayers:
+                for kernel_size in finalKernelSize:
+                    for conv_stride in finalConvStride:
                         config = CNNConfig(batchsize=batchsize, lr=lr, number_conv_layers=number_conv_layers, kernel_size=kernel_size, out_channels=4, conv_stride=conv_stride, epochs=40, patience=7)
 
-                        runner = CNNRunner(config)
+                        runner = Runner(config=config)
 
                         trainer, test_loader, valMetrics = runner.startModel()
 
@@ -32,3 +38,5 @@ if __name__ == "__main__":
 print(f"Final best validation accuracy: {best_metric.final_best_val} | "
       f"Final best test accuracy: {best_metric.final_best_test} | "
       f"With the following Hyperparameters: {best_metric.model.print()}")
+
+best_metric.drawGraph("BestVal")
