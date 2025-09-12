@@ -10,6 +10,8 @@ class Metrics(BaseModel):
 
     metrics: List[TrainingMetric] = []
     model: (CNN, MLP) = None
+    final_best_val: float = 0.0
+    final_best_test: float = 0.0
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
