@@ -4,6 +4,7 @@ from app.TrainingMetric import TrainingMetric
 from app.CNN.CNN import CNN
 from app.MLP.MLP import MLP
 from torch.utils.tensorboard import SummaryWriter
+from typing import Self
 
 
 class Metrics(BaseModel):
@@ -26,8 +27,6 @@ class Metrics(BaseModel):
             return self.metrics[index]
         except IndexError:
             return self.metrics[-1]
-        else:
-            return print("Metrics empty")
 
     def drawGraph(self, type: str) -> None:
 
@@ -36,3 +35,11 @@ class Metrics(BaseModel):
             writer.add_scalar(f"Loss Function {type}", metric.loss, global_step=metric.epoch)
 
         writer.close()
+
+    def checkBestMetric(self, best_metric: Self, config) -> Self:
+        if self.getElementByIndex(
+                (config.patience * -1) - 1).loss < best_metric.getElementByIndex(
+            (config.patience * -1) - 1).loss:
+            return self
+        else:
+            return best_metric
