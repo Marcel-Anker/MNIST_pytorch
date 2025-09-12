@@ -1,14 +1,15 @@
 from CNNConfig import CNNConfig
 from CNNRunner import CNNRunner
+from app.Metrics import Metrics
 
 best_metric: Metrics | None = None
 if __name__ == "__main__":
-    for lr in [0.001, 1]:
+    for lr in [0.001, 0.002]:
         for batchsize in [16]:
             for number_conv_layers in [2]:
                 for kernel_size in [3]:
                     for conv_stride in [1]:
-                        config = CNNConfig(batchsize=batchsize, lr=lr, number_conv_layers=number_conv_layers, kernel_size=kernel_size, out_channels=4, conv_stride=conv_stride, epochs=40, patience=10)
+                        config = CNNConfig(batchsize=batchsize, lr=lr, number_conv_layers=number_conv_layers, kernel_size=kernel_size, out_channels=4, conv_stride=conv_stride, epochs=40, patience=7)
 
                         runner = CNNRunner(config)
 
