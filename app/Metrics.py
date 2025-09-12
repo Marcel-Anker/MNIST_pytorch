@@ -29,11 +29,10 @@ class Metrics(BaseModel):
         else:
             return print("Metrics empty")
 
+    def drawGraph(self, type: str) -> None:
 
-    def drawGraph(self) -> None:
-        writer = SummaryWriter("runs/mnist")
-
+        writer = SummaryWriter(f"runs/mnist/{type}")
         for metric in self.metrics:
-            writer.add_scalar("Loss Function Plot", metric.epoch, int(metric.loss))
+            writer.add_scalar(f"Loss Function {type}", metric.loss, global_step=metric.epoch)
 
         writer.close()
