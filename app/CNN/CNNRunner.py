@@ -1,10 +1,9 @@
-from CNNConfig import CNNConfig
 from app.Data import Data
 from CNNBNormModel import CNNBNormModel
 from app.Trainer import Trainer
 
 
-class CNNRunner():
+class CNNRunner:
     def __init__(self, config):
         self.config = config
 
@@ -19,9 +18,7 @@ class CNNRunner():
 
         valMetrics, trainMetrics = trainer.train(train_loader, val_loader)
 
-        trainMetrics.drawGraph()
-        valMetrics.drawGraph()
+        trainMetrics.drawGraph("train")
+        valMetrics.drawGraph("val")
 
-        valMetrics.model.print()
-
-        return trainer, test_loader
+        return trainer, test_loader, valMetrics
