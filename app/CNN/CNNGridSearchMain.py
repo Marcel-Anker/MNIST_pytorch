@@ -1,6 +1,7 @@
 from CNNConfig import CNNConfig
 from CNNRunner import CNNRunner
 
+best_metric: Metrics | None = None
 if __name__ == "__main__":
     for lr in [0.001, 1]:
         for batchsize in [16]:
@@ -11,8 +12,22 @@ if __name__ == "__main__":
 
                         runner = CNNRunner(config)
 
-                        trainer, test_loader = runner.startModel()
+                        trainer, test_loader, valMetrics = runner.startModel()
 
                         test_acc, _ = trainer.evaluate(test_loader)
 
                         print(f"Final Test Accuracy: {test_acc:.2f}%")
+
+                        valMetrics.final_best_val = valMetrics.getElementByIndex(config.patience).acc
+                        valMetrics.final_best_test = test_acc
+
+                        if best_metric == None:
+                            best_metric = valMetrics
+
+                        best_metric = valMetrics.checkBestMetric(best_metric=best_metric, config=config)
+
+
+
+print(f"Final best validation accuracy: {best_metric.final_best_val} | "
+      f"Final best test accuracy: {best_metric.final_best_test} | "
+      f"With the following Hyperparameters: {best_metric.model.print()}")
