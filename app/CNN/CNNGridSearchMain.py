@@ -17,11 +17,11 @@ if os.path.exists("app/CNN/runs"):
 
 
 if __name__ == "__main__":
-    for lr in finalLr:
-        for batchsize in finalBatchsize:
-            for number_conv_layers in finalNumberConvLayers:
-                for kernel_size in finalKernelSize:
-                    for conv_stride in finalConvStride:
+    for lr in [0.001]:
+        for batchsize in [16]:
+            for number_conv_layers in [2]:
+                for kernel_size in [3]:
+                    for conv_stride in [1]:
                         config = CNNConfig(batchsize=batchsize, lr=lr, number_conv_layers=number_conv_layers, kernel_size=kernel_size, out_channels=4, conv_stride=conv_stride, epochs=40, patience=7)
 
                         runner = Runner(config=config)
@@ -43,8 +43,8 @@ if __name__ == "__main__":
 
 
 
-print(f"Final best validation accuracy: {best_metric.final_best_val} | "
-      f"Final best test accuracy: {best_metric.final_best_test} | "
+print(f"Final best validation accuracy: {best_metric.final_best_val:.2f}% | "
+      f"Final best test accuracy: {best_metric.final_best_test:.2f}% | "
       f"With the following Hyperparameters: {best_metric.model.print()}")
 
 best_metric.drawGraph(f"BestValCNN{datetime.now()}")

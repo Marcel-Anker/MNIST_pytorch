@@ -15,10 +15,10 @@ finalHiddenLayerSize = [25, 50, 75, 100, 200]
 finalNumberOfHiddenLayers = [5, 20, 50, 100, 200]
 
 if __name__ == "__main__":
-    for lr in finalLr:
-        for batchsize in finalBatchsize:
-            for hidden_layer_size in finalHiddenLayerSize:
-                for number_of_hidden_layers in finalNumberOfHiddenLayers:
+    for lr in [0.001]:
+        for batchsize in [16]:
+            for hidden_layer_size in [100]:
+                for number_of_hidden_layers in [100]:
                     config = MLPConfig(batchsize=batchsize, lr=lr, hidden_layer_size=hidden_layer_size, number_of_hidden_layers=number_of_hidden_layers, epochs=40,
                                        patience=7)
 
@@ -43,4 +43,5 @@ print(f"Final best validation accuracy: {best_metric.final_best_val} | "
       f"Final best test accuracy: {best_metric.final_best_test} | "
       f"With the following Hyperparameters: {best_metric.model.print()}")
 
-best_metric.drawGraph("BestVal")
+best_metric.drawGraph(f"BestValMLP{datetime.now()}")
+best_metric.drawImages(f"WrongImagesOfBestConfMLP{datetime.now()}")
