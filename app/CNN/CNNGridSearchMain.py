@@ -1,3 +1,6 @@
+import os
+import shutil
+from datetime import datetime
 from CNNConfig import CNNConfig
 from app.Runner import Runner
 from app.Metrics import Metrics
@@ -8,6 +11,10 @@ finalBatchsize = [4, 8, 16, 32, 64]
 finalNumberConvLayers = [4, 8, 15, 25, 50]
 finalKernelSize = [2, 3, 4, 5, 6]
 finalConvStride = [1, 2, 3, 4, 5]
+
+if os.path.exists("app/CNN/runs"):
+    shutil.rmtree("app/CNN/runs")
+
 
 if __name__ == "__main__":
     for lr in finalLr:

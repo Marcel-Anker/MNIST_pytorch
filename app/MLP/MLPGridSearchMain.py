@@ -1,6 +1,12 @@
+import os
+import shutil
+from datetime import datetime
 from MLPConfig import MLPConfig
 from app.Runner import Runner
 from app.Metrics import Metrics
+
+if os.path.exists("app/MLP/runs"):
+    shutil.rmtree("app/MLP/runs")
 
 best_metric: Metrics | None = None
 finalLr = [0.0005, 0.001, 0.002, 0.005, 0.01]
