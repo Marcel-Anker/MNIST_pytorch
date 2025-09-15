@@ -1,6 +1,7 @@
 from typing import Union
 
 import torch.nn
+from torch import Tensor
 from app.MLP.MLPConfig import MLPConfig
 from app.CNN.CNNConfig import CNNConfig
 from app.CNN.CNNBNormModel import CNNBNormModel
@@ -47,7 +48,7 @@ class Trainer:
                 total_samples += labels.size(0)
 
             train_acc = 100 * running_correct / total_samples
-            val_acc, running_val_loss = self.evaluate(val_loader)
+            val_acc, running_val_loss, wrong_images = self.evaluate(val_loader)
             train_loss = running_train_loss / len(train_loader)
             val_loss = running_val_loss / len(val_loader)
 
@@ -93,7 +94,7 @@ class Trainer:
                     trainMetrics.model = valMetrics.model = model
 
             trainMetric = TrainingMetric(loss=train_loss, epoch=epoch, acc=train_acc)
-            valMetric = TrainingMetric(loss=val_loss, epoch=epoch, acc= val_acc)
+            valMetric = TrainingMetric(loss=val_loss, epoch=epoch, acc= val_acc, wrong_val_images=wrong_images)
 
             trainMetrics.appendMetric(trainMetric)
             valMetrics.appendMetric(valMetric)
@@ -105,18 +106,22 @@ class Trainer:
         return valMetrics, trainMetrics
 
 
-    def evaluate(self, loader) -> tuple[float, int]:
+    def evaluate(self, loader) -> tuple[float, int, list]:
         self.model.eval()
         correct = 0
         total = 0
         running_loss = 0
+        wrong_images = []
         with torch.no_grad():
             for inputs, labels in loader:
                 outputs = self.model(inputs)
                 loss = self.loss_function(outputs, labels)
                 _, predicted = torch.max(outputs, 1)
+                wrong_mask: Tensor = predicted != labels
+                if wrong_mask.any():
+                    wrong_images.append(inputs[wrong_mask])
                 correct += torch.eq(predicted,labels).sum().item()
                 total += labels.size(0)
                 acc = 100 * correct / total
                 running_loss += loss.item()
-        return acc, running_loss
+        return acc, running_loss, wrong_images

@@ -1,5 +1,8 @@
+import torch
+import torchvision
 from pydantic import BaseModel, ConfigDict
 from typing import List
+from torch import Tensor
 from app.TrainingMetric import TrainingMetric
 from app.CNN.CNN import CNN
 from app.MLP.MLP import MLP
@@ -13,6 +16,7 @@ class Metrics(BaseModel):
     model: (CNN, MLP) = None
     final_best_val: float = 0.0
     final_best_test: float = 0.0
+    wrong_test_images: List[Tensor] = []
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -34,6 +38,17 @@ class Metrics(BaseModel):
         for metric in self.metrics:
             writer.add_scalar(f"Loss Function {type}", metric.loss, global_step=metric.epoch)
 
+        writer.close()
+
+    def drawImages(self, type: str) -> None:
+
+        writer = SummaryWriter(f"runs/mnist{type}")
+
+        wrong_images = torch.cat(self.wrong_test_images)
+
+        img_grid = torchvision.utils.make_grid(wrong_images[:36], nrow=6, normalize=True) #16, da Stichprobe reicht
+
+        writer.add_image(f"Falsch klassifizierte Bilder von {type}", img_grid)
         writer.close()
 
     def checkBestMetric(self, best_metric: Self, config) -> Self:

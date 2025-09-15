@@ -21,12 +21,13 @@ if __name__ == "__main__":
 
                         trainer, test_loader, valMetrics = runner.startModel()
 
-                        test_acc, _ = trainer.evaluate(test_loader)
+                        test_acc, _, wrong_images = trainer.evaluate(test_loader)
 
                         print(f"Final Test Accuracy: {test_acc:.2f}%")
 
                         valMetrics.final_best_val = valMetrics.getElementByIndex(config.patience).acc
                         valMetrics.final_best_test = test_acc
+                        valMetrics.wrong_test_images = wrong_images
 
                         if best_metric == None:
                             best_metric = valMetrics
@@ -39,4 +40,5 @@ print(f"Final best validation accuracy: {best_metric.final_best_val} | "
       f"Final best test accuracy: {best_metric.final_best_test} | "
       f"With the following Hyperparameters: {best_metric.model.print()}")
 
-best_metric.drawGraph("BestVal")
+best_metric.drawGraph(f"BestValCNN{datetime.now()}")
+best_metric.drawImages(f"WrongImagesOfBestConfCNN{datetime.now()}")
