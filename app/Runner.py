@@ -30,7 +30,7 @@ class Runner(BaseModel):
         valMetrics, trainMetrics = trainer.train(train_loader, val_loader)
 
 
-        if self.config.__module__ == CNNConfig.__name__:
+        if valMetrics.model == CNN:
             trainMetrics.drawGraph("CNNTrain")
             valMetrics.drawGraph("CNNVal")
         else:
