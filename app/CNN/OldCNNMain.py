@@ -1,6 +1,6 @@
 from CNNConfig import CNNConfig
 from app.Data import Data
-from CNNBNormModel import CNNBNormModel
+from CNNModel import CNNModel
 from app.Trainer import Trainer
 
 if __name__ == "__main__":
@@ -9,7 +9,7 @@ if __name__ == "__main__":
     data_module = Data(config)
     train_loader, val_loader, test_loader = data_module.get_loaders()
 
-    modelBNorm = CNNBNormModel(config)
+    modelBNorm = CNNModel(config)
 
     trainerBNorm = Trainer(modelBNorm, config)
 

@@ -4,7 +4,7 @@ import torch.nn
 from torch import Tensor
 from app.MLP.MLPConfig import MLPConfig
 from app.CNN.CNNConfig import CNNConfig
-from app.CNN.CNNBNormModel import CNNBNormModel
+from app.CNN.CNNModel import CNNModel
 from app.MLP.MLPModel import MLPModel
 from app.TrainingMetric import TrainingMetric
 from app.Metrics import Metrics
@@ -14,7 +14,7 @@ from app.MLP.MLP import MLP
 
 class Trainer:
     def __init__(self, model, config):
-        self.model: Union[MLPModel, CNNBNormModel] = model
+        self.model: Union[MLPModel, CNNModel] = model
         self.config: Union[MLPConfig, CNNConfig] = config
         self.loss_function = torch.nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(model.parameters(), lr=self.config.learning_rate, momentum=0.9)

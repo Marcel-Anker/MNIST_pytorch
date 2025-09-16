@@ -1,11 +1,12 @@
 from pydantic import BaseModel
 from app.Data import Data
 from pydantic import BaseModel, ConfigDict
-from app.CNN.CNNBNormModel import CNNBNormModel
+from app.CNN.CNNModel import CNNModel
 from app.MLP.MLPModel import MLPModel
 from app.MLP.MLPConfig import MLPConfig
 from app.CNN.CNNConfig import CNNConfig
 from app.Trainer import Trainer
+from app.CNN.CNN import CNN
 
 
 class Runner(BaseModel):
@@ -18,7 +19,7 @@ class Runner(BaseModel):
         train_loader, val_loader, test_loader = data_module.get_loaders()
 
         if self.config.__module__ == CNNConfig.__name__:
-            model = CNNBNormModel(self.config)
+            model = CNNModel(self.config)
             #print("cnn")
         else:
             model = MLPModel(self.config)

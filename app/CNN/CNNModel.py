@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as functions
 
-class CNNBNormModel(nn.Module):
+class CNNModel(nn.Module):
     def __init__(self, config):
-        super(CNNBNormModel, self).__init__()
+        super(CNNModel, self).__init__()
         self.config = config
         self.firstConv = nn.Conv2d(in_channels=1, out_channels=self.config.out_channels, kernel_size=self.config.kernel_size)
         self.firstBNorm = nn.BatchNorm2d(self.config.out_channels)
