@@ -5,7 +5,7 @@ class CNNConfig():
         self.batchsize = batchsize
         self.learning_rate = lr
         self.epochs = epochs
-        self.number_conv_layers = number_conv_layers
+        self.number_conv_layers = number_conv_layers - 1
         self.kernel_size = kernel_size
         self.out_channels = out_channels
         self.conv_stride = conv_stride

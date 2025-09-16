@@ -5,5 +5,5 @@ class MLPConfig:
         self.learning_rate = lr
         self.epochs = epochs
         self.hidden_layer_size = hidden_layer_size
-        self.number_of_hidden_layers = number_of_hidden_layers
+        self.number_of_hidden_layers = number_of_hidden_layers - 1
         self.patience = patience
