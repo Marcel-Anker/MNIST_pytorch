@@ -5,3 +5,5 @@ __pycache__/
 app/CNN/runs
 app/MLP/runs
 *.xml
+app/CNN/OldCNNMain.py
+app/MLP/OldMLPMain.py
