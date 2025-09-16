@@ -22,7 +22,7 @@ class CNNBNormModel(nn.Module):
         result = functions.relu(self.firstConv(result))
         #print(result.shape, "1")
         for i in range(self.config.number_conv_layers):
-            result = getattr(self, f"conv{i}")(result)
+            result = functions.relu(getattr(self, f"conv{i}")(result))
             #print(result.shape, "n")
         result = torch.flatten(result, 1)
         #print(result, "2")
