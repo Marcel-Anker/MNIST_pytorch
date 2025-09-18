@@ -17,7 +17,7 @@ class Trainer:
         self.model: Union[MLPModel, CNNModel] = model
         self.config: Union[MLPConfig, CNNConfig] = config
         self.loss_function = torch.nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.SGD(model.parameters(), lr=self.config.learning_rate, momentum=0.9)
+        self.optimizer = torch.optim.SGD(model.parameters(), lr=self.config.learning_rate, momentum=0.0)
 
     def train(self, train_loader, val_loader) -> tuple[Metrics, Metrics]:
 
@@ -26,8 +26,8 @@ class Trainer:
             return valMetrics, trainMetrics
 
     def runEpochs(self, train_loader, val_loader) -> tuple[Metrics, Metrics]:
-        best_val_loss = 2.0 #hoher Wert damit early Stopping ansetzt
-        counter = 0
+        best_val_loss = 5.0 #relativly high value so that early stopping works
+        patience_counter = 0 #paitence counter for early stopping
         trainMetrics = Metrics()
         valMetrics = Metrics()
         for epoch in range(self.config.epochs):
@@ -54,22 +54,22 @@ class Trainer:
 
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
-                counter = 0
+                patience_counter = 0
                 torch.save(self.model.state_dict(), "best_model.pt")
             else:
-                counter += 1
+                patience_counter += 1
 
-            if self.config.__module__ == MLPConfig.__name__:  # ich hasse isinstance :/
+            if self.config.__module__ == MLPConfig.__name__:  # isinstance doesnt work :/
                 print(
                     f"Epoch {epoch + 1}/{self.config.epochs} | Validation Loss: {val_loss:.4f} | Training Loss: {train_loss:.4f} | Val Acc: {val_acc:.2f}% | Training Acc: {train_acc:.2f}% | "
                     f"Learning Rate: {self.config.learning_rate} | Batch Size: {self.config.batchsize} | "
-                    f"Number of Hidden Layers: {self.config.number_of_hidden_layers} | Hidden Layer Size: {self.config.hidden_layer_size}")
+                    f"Number of Hidden Layers: {self.config.number_of_hidden_layers + 1} | Hidden Layer Size: {self.config.hidden_layer_size}")
 
             if self.config.__module__ == CNNConfig.__name__:
                 print(
                     f"Epoch {epoch + 1}/{self.config.epochs} | Validation Loss: {val_loss:.4f} | Training Loss: {train_loss:.4f} | Val Acc: {val_acc:.2f}% | Training Acc: {train_acc:.2f}% | "
                     f"Learning Rate: {self.config.learning_rate} | Batch Size: {self.config.batchsize} | "
-                    f"Number of Conv and Pool Layers: {self.config.number_conv_layers} | Kernel Size: {self.config.kernel_size} | "
+                    f"Number of Conv and Pool Layers: {self.config.number_conv_layers + 1} | Kernel Size: {self.config.kernel_size} | "
                     f"Out Channels: {self.config.out_channels}")
 
             if val_acc > best_val_acc:
@@ -99,7 +99,7 @@ class Trainer:
             trainMetrics.appendMetric(trainMetric)
             valMetrics.appendMetric(valMetric)
 
-            if counter >= self.config.patience:
+            if patience_counter >= self.config.patience:
                 print("early stopped")
                 return valMetrics, trainMetrics
 

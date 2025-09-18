@@ -5,11 +5,11 @@ class MLPModel(nn.Module):
     def __init__(self, config):
         super(MLPModel, self).__init__()
         self.config = config
-        self.firstFc = nn.Linear(28 * 28, self.config.hidden_layer_size) #28 * 28 mnist bild
+        self.firstFc = nn.Linear(in_features=28 * 28, out_features=self.config.hidden_layer_size) #28 * 28 mnist picture
         for i in range(self.config.number_of_hidden_layers):
-            setattr(self, f"fc{i}", nn.Linear(self.config.hidden_layer_size, self.config.hidden_layer_size))
+            setattr(self, f"fc{i}", nn.Linear(in_features=self.config.hidden_layer_size, out_features=self.config.hidden_layer_size))
             setattr(self, f"bnorm{i}", nn.BatchNorm2d(self.config.hidden_layer_size))
-        self.lastFc= nn.Linear(self.config.hidden_layer_size, 10) #0-9 als prediction
+        self.lastFc= nn.Linear(in_features=self.config.hidden_layer_size, out_features=10) #0-9 als prediction
 
     def forward(self, result):
         result = result.view(result.size(0), -1)
