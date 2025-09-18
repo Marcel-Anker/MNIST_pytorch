@@ -8,20 +8,22 @@ from app.Metrics import Metrics
 best_metric: Metrics | None = None
 finalLr = [0.0005, 0.001, 0.002, 0.005, 0.01]
 finalBatchsize = [4, 8, 16, 32, 64]
-finalNumberConvLayers = [4, 8, 15, 25, 50]
+finalNumberConvLayers = [1, 2, 3, 4, 5]
 finalKernelSize = [2, 3, 4, 5, 6]
 finalConvStride = [1, 2, 3, 4, 5]
 
-if os.path.exists("app/CNN/runs"):
+if os.path.exists("app/CNN/runs"): # clearing runs directory so that tensorboard shows recent statistics (tensorboard might still show cached data)
     shutil.rmtree("app/CNN/runs")
+
+os.remove("/Users/marcelanker/PycharmProjects/MINST_pytorch/app/CNN/best_model.pt") # removing best model just in case
 
 
 if __name__ == "__main__":
-    for lr in [0.001]:
-        for batchsize in [16]:
-            for number_conv_layers in [2]:
-                for kernel_size in [3]:
-                    for conv_stride in [1]:
+    for lr in finalLr:
+        for batchsize in finalBatchsize:
+            for number_conv_layers in finalNumberConvLayers:
+                for kernel_size in finalKernelSize:
+                    for conv_stride in finalConvStride:
                         config = CNNConfig(batchsize=batchsize, lr=lr, number_conv_layers=number_conv_layers, kernel_size=kernel_size, out_channels=4, conv_stride=conv_stride, epochs=40, patience=7)
 
                         runner = Runner(config=config)
