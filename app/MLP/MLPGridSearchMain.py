@@ -5,20 +5,22 @@ from MLPConfig import MLPConfig
 from app.Runner import Runner
 from app.Metrics import Metrics
 
-if os.path.exists("app/MLP/runs"):
+if os.path.exists("app/MLP/runs"): # clearing runs directory so that tensorboard shows recent statistics (tensorboard might still show cached data)
     shutil.rmtree("app/MLP/runs")
+
+os.remove("/Users/marcelanker/PycharmProjects/MINST_pytorch/app/MLP/best_model.pt") # removing best model just in case
 
 best_metric: Metrics | None = None
 finalLr = [0.0005, 0.001, 0.002, 0.005, 0.01]
 finalBatchsize = [4, 8, 16, 32, 64]
-finalHiddenLayerSize = [25, 50, 75, 100, 200]
-finalNumberOfHiddenLayers = [5, 20, 50, 100, 200]
+finalHiddenLayerSize = [32, 64, 128, 256, 512]
+finalNumberOfHiddenLayers = [1, 2, 3, 4, 5]
 
 if __name__ == "__main__":
-    for lr in [0.001]:
-        for batchsize in [16]:
-            for hidden_layer_size in [100]:
-                for number_of_hidden_layers in [100]:
+    for lr in finalLr:
+        for batchsize in finalBatchsize:
+            for hidden_layer_size in finalHiddenLayerSize:
+                for number_of_hidden_layers in finalNumberOfHiddenLayers:
                     config = MLPConfig(batchsize=batchsize, lr=lr, hidden_layer_size=hidden_layer_size, number_of_hidden_layers=number_of_hidden_layers, epochs=40,
                                        patience=7)
 
