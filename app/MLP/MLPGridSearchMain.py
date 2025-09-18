@@ -19,17 +19,17 @@ else:
     print("MPS device not found.")
 
 best_metric: Metrics | None = None
-finalLr = [0.0005, 0.001, 0.002, 0.005, 0.01]
-finalBatchsize = [4, 8, 16, 32, 64]
-finalHiddenLayerSize = [32, 64, 128, 256, 512]
-finalNumberOfHiddenLayers = [1, 2, 3, 4, 5]
+finalLr = [0.001, 0.002, 0.005, 0.01]
+finalBatchsize = [512, 1024, 1536, 2048]
+finalHiddenLayerSize = [64, 128, 256, 512]
+finalNumberOfHiddenLayers = [1, 2, 3, 4]
 
 if __name__ == "__main__":
     for lr in finalLr:
         for batchsize in finalBatchsize:
             for hidden_layer_size in finalHiddenLayerSize:
                 for number_of_hidden_layers in finalNumberOfHiddenLayers:
-                    config = MLPConfig(batchsize=batchsize, lr=lr, hidden_layer_size=hidden_layer_size, number_of_hidden_layers=number_of_hidden_layers, epochs=40,
+                    config = MLPConfig(batchsize=batchsize, lr=lr, hidden_layer_size=hidden_layer_size, number_of_hidden_layers=number_of_hidden_layers, epochs=100,
                                        patience=7)
 
                     runner = Runner(config=config)
