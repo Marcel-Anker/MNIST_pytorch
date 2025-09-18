@@ -17,6 +17,7 @@ class Metrics(BaseModel):
     final_best_val: float = 0.0
     final_best_test: float = 0.0
     wrong_test_images: List[Tensor] = []
+    final_epoch_mean_time: float = 0.0
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -58,3 +59,11 @@ class Metrics(BaseModel):
             return self
         else:
             return best_metric
+
+    def getMeanEpochTime(self) -> float:
+        mean_time = 0.0
+        len = 0
+        for metric in self.metrics:
+            mean_time += metric.epoch_time
+            len += 1
+        return mean_time / len

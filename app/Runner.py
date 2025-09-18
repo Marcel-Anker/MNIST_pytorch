@@ -29,6 +29,7 @@ class Runner(BaseModel):
 
         valMetrics, trainMetrics = trainer.train(train_loader, val_loader)
 
+        valMetrics.final_epoch_mean_time = trainMetrics.getMeanEpochTime()
 
         if valMetrics.model == CNN:
             trainMetrics.drawGraph("CNNTrain")

@@ -41,9 +41,11 @@ if __name__ == "__main__":
 
                     best_metric = valMetrics.checkBestMetric(best_metric=best_metric, config=config)
 
-print(f"Final best validation accuracy: {best_metric.final_best_val} | "
+print(f"Final best validation accuracy: {best_metric.final_best_val:.2f} | "
       f"Final best test accuracy: {best_metric.final_best_test} | "
-      f"With the following Hyperparameters: {best_metric.model.print()}")
+      f"Final epoch mean time: {best_metric.final_epoch_mean_time:.2f}")
+
+best_metric.model.printParameters()
 
 best_metric.drawGraph(f"BestValMLP{datetime.now()}")
 best_metric.drawImages(f"WrongImagesOfBestConfMLP{datetime.now()}")

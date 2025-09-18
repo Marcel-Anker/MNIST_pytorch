@@ -1,5 +1,6 @@
 from typing import Union
 
+import time
 import torch.nn
 from torch import Tensor
 from app.MLP.MLPConfig import MLPConfig
@@ -31,6 +32,7 @@ class Trainer:
         trainMetrics = Metrics()
         valMetrics = Metrics()
         for epoch in range(self.config.epochs):
+            start_epoch_time = time.time()
             self.model.train()
             best_val_acc = 0.0
             running_train_loss = 0.0
@@ -59,18 +61,22 @@ class Trainer:
             else:
                 patience_counter += 1
 
+            end_epoch_time = time.time()
+
             if self.config.__module__ == MLPConfig.__name__:  # isinstance doesnt work :/
                 print(
                     f"Epoch {epoch + 1}/{self.config.epochs} | Validation Loss: {val_loss:.4f} | Training Loss: {train_loss:.4f} | Val Acc: {val_acc:.2f}% | Training Acc: {train_acc:.2f}% | "
                     f"Learning Rate: {self.config.learning_rate} | Batch Size: {self.config.batchsize} | "
-                    f"Number of Hidden Layers: {self.config.number_of_hidden_layers + 1} | Hidden Layer Size: {self.config.hidden_layer_size}")
+                    f"Number of Hidden Layers: {self.config.number_of_hidden_layers + 1} | Hidden Layer Size: {self.config.hidden_layer_size} | "
+                    f"Elapsed time for epoch: {end_epoch_time-start_epoch_time}")
 
             if self.config.__module__ == CNNConfig.__name__:
                 print(
                     f"Epoch {epoch + 1}/{self.config.epochs} | Validation Loss: {val_loss:.4f} | Training Loss: {train_loss:.4f} | Val Acc: {val_acc:.2f}% | Training Acc: {train_acc:.2f}% | "
                     f"Learning Rate: {self.config.learning_rate} | Batch Size: {self.config.batchsize} | "
                     f"Number of Conv and Pool Layers: {self.config.number_conv_layers + 1} | Kernel Size: {self.config.kernel_size} | "
-                    f"Out Channels: {self.config.out_channels}")
+                    f"Out Channels: {self.config.out_channels} | "
+                    f"Elapsed time for epoch: {end_epoch_time-start_epoch_time}")
 
             if val_acc > best_val_acc:
                 best_val_acc = val_acc
@@ -93,7 +99,7 @@ class Trainer:
                     )
                     trainMetrics.model = valMetrics.model = model
 
-            trainMetric = TrainingMetric(loss=train_loss, epoch=epoch, acc=train_acc)
+            trainMetric = TrainingMetric(loss=train_loss, epoch=epoch, acc=train_acc, epoch_time=end_epoch_time - start_epoch_time)
             valMetric = TrainingMetric(loss=val_loss, epoch=epoch, acc= val_acc, wrong_val_images=wrong_images)
 
             trainMetrics.appendMetric(trainMetric)

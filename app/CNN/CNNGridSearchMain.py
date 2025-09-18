@@ -47,7 +47,9 @@ if __name__ == "__main__":
 
 print(f"Final best validation accuracy: {best_metric.final_best_val:.2f}% | "
       f"Final best test accuracy: {best_metric.final_best_test:.2f}% | "
-      f"With the following Hyperparameters: {best_metric.model.print()}")
+      f"Final epoch mean time: {best_metric.final_epoch_mean_time:.2f}")
+
+best_metric.model.printParameters()
 
 best_metric.drawGraph(f"BestValCNN{datetime.now()}")
 best_metric.drawImages(f"WrongImagesOfBestConfCNN{datetime.now()}")
