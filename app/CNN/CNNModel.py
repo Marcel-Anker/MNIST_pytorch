@@ -9,7 +9,6 @@ class CNNModel(nn.Module):
         self.firstConv = nn.Conv2d(in_channels=1, out_channels=self.config.out_channels, kernel_size=self.config.kernel_size, stride=self.config.conv_stride)
         self.firstBNorm = nn.BatchNorm2d(self.config.out_channels)
         h, w = self.compute_out_dim(height=28, width=28, kernel_size=self.config.kernel_size, stride=self.config.conv_stride, padding=0, num_layers=self.config.number_conv_layers)
-        print(w, h, self.config.out_channels)
         in_ch = self.config.out_channels
         out_ch = self.config.out_channels
         for i in range(self.config.number_conv_layers):
@@ -17,10 +16,9 @@ class CNNModel(nn.Module):
             setattr(self, f"conv{i}", nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=self.config.kernel_size, stride=self.config.conv_stride))
             setattr(self, f"bNorm{i}", nn.BatchNorm2d(out_ch))
             h, w = self.compute_out_dim(height=h, width=w, kernel_size=self.config.kernel_size, stride=self.config.conv_stride,padding=0, num_layers=self.config.number_conv_layers)
-            print(w, h, out_ch)
             in_ch = out_ch
         self.fc = nn.Linear(in_features=w * h * out_ch, out_features=10)
-        print(w, h, out_ch)
+        self.to('mps')
 
     def forward(self, result):
         result = functions.relu(self.firstConv(result))

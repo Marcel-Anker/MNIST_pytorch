@@ -10,6 +10,7 @@ class MLPModel(nn.Module):
             setattr(self, f"fc{i}", nn.Linear(in_features=self.config.hidden_layer_size, out_features=self.config.hidden_layer_size))
             setattr(self, f"bnorm{i}", nn.BatchNorm2d(self.config.hidden_layer_size))
         self.lastFc= nn.Linear(in_features=self.config.hidden_layer_size, out_features=10) #0-9 als prediction
+        self.to('mps')
 
     def forward(self, result):
         result = result.view(result.size(0), -1)

@@ -1,6 +1,9 @@
 import os
 import shutil
 from datetime import datetime
+
+from sympy.printing.pytorch import torch
+
 from MLPConfig import MLPConfig
 from app.Runner import Runner
 from app.Metrics import Metrics
@@ -8,7 +11,12 @@ from app.Metrics import Metrics
 if os.path.exists("app/MLP/runs"): # clearing runs directory so that tensorboard shows recent statistics (tensorboard might still show cached data)
     shutil.rmtree("app/MLP/runs")
 
-os.remove("/Users/marcelanker/PycharmProjects/MINST_pytorch/app/MLP/best_model.pt") # removing best model just in case
+os.remove(r"../../app/MLP/best_model.pt") # removing best model just in case
+
+if torch.backends.mps.is_available():
+    mps_device = torch.device("mps")
+else:
+    print("MPS device not found.")
 
 best_metric: Metrics | None = None
 finalLr = [0.0005, 0.001, 0.002, 0.005, 0.01]

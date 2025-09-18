@@ -1,6 +1,9 @@
 import os
 import shutil
 from datetime import datetime
+
+from sympy.printing.pytorch import torch
+
 from CNNConfig import CNNConfig
 from app.Runner import Runner
 from app.Metrics import Metrics
@@ -15,8 +18,12 @@ finalConvStride = [1, 2, 3, 4, 5]
 if os.path.exists("app/CNN/runs"): # clearing runs directory so that tensorboard shows recent statistics (tensorboard might still show cached data)
     shutil.rmtree("app/CNN/runs")
 
-os.remove("/Users/marcelanker/PycharmProjects/MINST_pytorch/app/CNN/best_model.pt") # removing best model just in case
+os.remove(r"../../app/CNN/best_model.pt") # removing best model just in case
 
+if torch.backends.mps.is_available():
+    mps_device = torch.device("mps")
+else:
+    print("MPS device not found.")
 
 if __name__ == "__main__":
     for lr in finalLr:

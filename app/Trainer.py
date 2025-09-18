@@ -39,6 +39,8 @@ class Trainer:
             running_correct = 0
             total_samples = 0
             for inputs, labels in train_loader:
+                inputs = inputs.to('mps')
+                labels = labels.to('mps')
                 self.optimizer.zero_grad()
                 outputs = self.model(inputs)
                 loss = self.loss_function(outputs, labels)
@@ -120,6 +122,8 @@ class Trainer:
         wrong_images = []
         with torch.no_grad():
             for inputs, labels in loader:
+                inputs = inputs.to('mps')
+                labels = labels.to('mps')
                 outputs = self.model(inputs)
                 loss = self.loss_function(outputs, labels)
                 _, predicted = torch.max(outputs, 1)
