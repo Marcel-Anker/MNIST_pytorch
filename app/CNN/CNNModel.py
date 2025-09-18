@@ -6,26 +6,27 @@ class CNNModel(nn.Module):
     def __init__(self, config):
         super(CNNModel, self).__init__()
         self.config = config
-        self.firstConv = nn.Conv2d(in_channels=1, out_channels=self.config.out_channels, kernel_size=self.config.kernel_size)
+        self.firstConv = nn.Conv2d(in_channels=1, out_channels=self.config.out_channels, kernel_size=self.config.kernel_size, stride=self.config.conv_stride)
         self.firstBNorm = nn.BatchNorm2d(self.config.out_channels)
         h, w = self.compute_out_dim(height=28, width=28, kernel_size=self.config.kernel_size, stride=self.config.conv_stride, padding=0, num_layers=self.config.number_conv_layers)
-        in_ch = 4
+        print(w, h, self.config.out_channels)
+        in_ch = self.config.out_channels
+        out_ch = self.config.out_channels
         for i in range(self.config.number_conv_layers):
             out_ch = self.config.out_channels * 2 * (i + 1)
-            setattr(self, f"conv{i}", nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=self.config.kernel_size))
+            setattr(self, f"conv{i}", nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=self.config.kernel_size, stride=self.config.conv_stride))
             setattr(self, f"bNorm{i}", nn.BatchNorm2d(out_ch))
             h, w = self.compute_out_dim(height=h, width=w, kernel_size=self.config.kernel_size, stride=self.config.conv_stride,padding=0, num_layers=self.config.number_conv_layers)
+            print(w, h, out_ch)
             in_ch = out_ch
-        self.fc = nn.Linear(in_features=h * w * self.config.out_channels * 2 * self.config.number_conv_layers, out_features=10)
+        self.fc = nn.Linear(in_features=w * h * out_ch, out_features=10)
+        print(w, h, out_ch)
 
     def forward(self, result):
         result = functions.relu(self.firstConv(result))
-        #print(result.shape, "1")
         for i in range(self.config.number_conv_layers):
             result = functions.relu(getattr(self, f"conv{i}")(result))
-            #print(result.shape, "n")
         result = torch.flatten(result, 1)
-        #print(result, "2")
         result = self.fc(result)
         return result
 
