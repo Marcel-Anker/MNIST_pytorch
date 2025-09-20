@@ -9,8 +9,6 @@ from app.CNN.CNNModel import CNNModel
 from app.MLP.MLPModel import MLPModel
 from app.TrainingMetric import TrainingMetric
 from app.Metrics import Metrics
-from app.CNN.CNN import CNN
-from app.MLP.MLP import MLP
 
 
 class Trainer:
@@ -34,7 +32,6 @@ class Trainer:
         for epoch in range(self.config.epochs):
             start_epoch_time = time.time()
             self.model.train()
-            best_val_acc = 0.0
             running_train_loss = 0.0
             running_correct = 0
             total_samples = 0
@@ -80,26 +77,6 @@ class Trainer:
                     f"Out Channels: {self.config.out_channels} | "
                     f"Elapsed time for epoch: {end_epoch_time-start_epoch_time}")
 
-            if val_acc > best_val_acc:
-                best_val_acc = val_acc
-                if self.config.__module__ == MLPConfig.__name__:
-                    model = MLP(
-                        lr=self.config.learning_rate,
-                        batchsize=self.config.batchsize,
-                        hidden_layer_size=self.config.hidden_layer_size,
-                        number_of_hidden_layers=self.config.number_of_hidden_layers,
-                    )
-                    trainMetrics.model = valMetrics.model = model
-
-                if self.config.__module__ == CNNConfig.__name__:
-                    model = CNN(
-                        lr=self.config.learning_rate,
-                        batchsize=self.config.batchsize,
-                        number_of_kernels=self.config.number_conv_layers,
-                        kernel_size=self.config.kernel_size,
-                        stride=self.config.conv_stride,
-                    )
-                    trainMetrics.model = valMetrics.model = model
 
             trainMetric = TrainingMetric(loss=train_loss, epoch=epoch, acc=train_acc, epoch_time=end_epoch_time - start_epoch_time)
             valMetric = TrainingMetric(loss=val_loss, epoch=epoch, acc= val_acc, wrong_val_images=wrong_images)
@@ -109,6 +86,7 @@ class Trainer:
 
             if patience_counter >= self.config.patience:
                 print("early stopped")
+                valMetrics.early_stopped = trainMetrics.early_stopped = True
                 return valMetrics, trainMetrics
 
         return valMetrics, trainMetrics

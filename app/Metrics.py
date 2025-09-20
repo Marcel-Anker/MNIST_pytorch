@@ -4,8 +4,6 @@ from pydantic import BaseModel, ConfigDict
 from typing import List
 from torch import Tensor
 from app.TrainingMetric import TrainingMetric
-from app.CNN.CNN import CNN
-from app.MLP.MLP import MLP
 from torch.utils.tensorboard import SummaryWriter
 from typing import Self
 
@@ -13,7 +11,6 @@ from typing import Self
 class Metrics(BaseModel):
 
     metrics: List[TrainingMetric] = []
-    model: (CNN, MLP) = None
     final_best_val: float = 0.0
     final_best_test: float = 0.0
     wrong_test_images: List[Tensor] = []

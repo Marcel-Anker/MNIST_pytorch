@@ -31,7 +31,7 @@ class Runner(BaseModel):
 
         valMetrics.final_epoch_mean_time = trainMetrics.getMeanEpochTime()
 
-        if valMetrics.model == CNN:
+        if self.config.__module__ == CNNConfig.__name__:
             trainMetrics.drawGraph("CNNTrain")
             valMetrics.drawGraph("CNNVal")
         else:
