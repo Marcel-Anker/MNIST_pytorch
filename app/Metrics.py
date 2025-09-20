@@ -15,6 +15,7 @@ class Metrics(BaseModel):
     final_best_test: float = 0.0
     wrong_test_images: List[Tensor] = []
     final_epoch_mean_time: float = 0.0
+    early_stopped: bool = False
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -25,9 +26,9 @@ class Metrics(BaseModel):
         if not self.metrics:
             print("Metrics empty")
 
-        try:
-            return self.metrics[index]
-        except IndexError:
+        if self.early_stopped:
+            return self.metrics[patience]
+        else:
             return self.metrics[-1]
 
     def drawGraph(self, type: str) -> None:
