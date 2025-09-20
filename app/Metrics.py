@@ -21,7 +21,7 @@ class Metrics(BaseModel):
     def appendMetric(self, metric) -> None:
         self.metrics.append(metric)
 
-    def getElementByIndex(self, index: int) -> TrainingMetric | None:
+    def getBestMetricElement(self, patience) -> TrainingMetric | None:
         if not self.metrics:
             print("Metrics empty")
 
@@ -50,8 +50,8 @@ class Metrics(BaseModel):
         writer.close()
 
     def checkBestMetric(self, best_metric: Self, config) -> Self:
-        if self.getElementByIndex(
-                (config.patience * -1) - 1).loss < best_metric.getElementByIndex(
+        if self.getBestMetricElement(
+                (config.patience * -1) - 1).loss < best_metric.getBestMetricElement(
             (config.patience * -1) - 1).loss:
             return self
         else:

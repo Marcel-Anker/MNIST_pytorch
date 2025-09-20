@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
                         print(f"Final Test Accuracy: {test_acc:.2f}%")
 
-                        valMetrics.final_best_val = valMetrics.getElementByIndex(config.patience).acc
+                        valMetrics.final_best_val = valMetrics.getBestMetricElement(config.patience).acc
                         valMetrics.final_best_test = test_acc
                         valMetrics.wrong_test_images = wrong_images
 
