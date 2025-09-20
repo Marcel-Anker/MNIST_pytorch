@@ -6,24 +6,21 @@ from app.MLP.MLPModel import MLPModel
 from app.MLP.MLPConfig import MLPConfig
 from app.CNN.CNNConfig import CNNConfig
 from app.Trainer import Trainer
-from app.CNN.CNN import CNN
 
 
 class Runner(BaseModel):
     config: (CNNConfig, MLPConfig)
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
-    def startModel(self ):
 
+    def startModel(self):
         data_module = Data(self.config)
         train_loader, val_loader, test_loader = data_module.get_loaders()
 
-        if self.config.__module__ == CNNConfig.__name__:
+        if self.config.__module__.split(".")[-1] == CNNConfig.__name__:
             model = CNNModel(self.config)
-            #print("cnn")
         else:
             model = MLPModel(self.config)
-            #print("mlp")
 
         trainer = Trainer(model, self.config)
 
