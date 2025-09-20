@@ -1,0 +1,7 @@
+Final best validation accuracy: 96.28% |
+Final best test accuracy: 96.89% |
+Final epoch mean time: 2.68 |
+Learning Rate: 0.01 |
+Batchsize: 1024 |
+Hidden Layer Size: 512 |
+Number of Hidden Layers: 3
