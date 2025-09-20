@@ -31,11 +31,11 @@ if __name__ == "__main__":
             for number_conv_layers in finalNumberConvLayers:
                 for kernel_size in finalKernelSize:
                     for conv_stride in finalConvStride:
-                        config = CNNConfig(batchsize=batchsize, lr=lr, number_conv_layers=number_conv_layers, kernel_size=kernel_size, out_channels=4, conv_stride=conv_stride, epochs=100, patience=7)
+                        config: CNNConfig = CNNConfig(batchsize=batchsize, lr=lr, number_conv_layers=number_conv_layers, kernel_size=kernel_size, out_channels=4, conv_stride=conv_stride, epochs=250, patience=7)
 
-                        runner = Runner(config=config)
+                        runnerCNN = Runner(config=config)
 
-                        trainer, test_loader, valMetrics = runner.startModel()
+                        trainer, test_loader, valMetrics = runnerCNN.startModel()
 
                         test_acc, _, wrong_images = trainer.evaluate(test_loader)
 

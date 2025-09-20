@@ -29,12 +29,12 @@ if __name__ == "__main__":
         for batchsize in finalBatchsize:
             for hidden_layer_size in finalHiddenLayerSize:
                 for number_of_hidden_layers in finalNumberOfHiddenLayers:
-                    config = MLPConfig(batchsize=batchsize, lr=lr, hidden_layer_size=hidden_layer_size, number_of_hidden_layers=number_of_hidden_layers, epochs=100,
+                    config: MLPConfig = MLPConfig(batchsize=batchsize, lr=lr, hidden_layer_size=hidden_layer_size, number_of_hidden_layers=number_of_hidden_layers, epochs=250,
                                        patience=7)
 
-                    runner = Runner(config=config)
+                    runnerMLP = Runner(config=config)
 
-                    trainer, test_loader, valMetrics = runner.startModel()
+                    trainer, test_loader, valMetrics = runnerMLP.startModel()
 
                     test_acc, _, wrong_images = trainer.evaluate(test_loader)
 
